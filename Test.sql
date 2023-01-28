@@ -25,4 +25,4 @@ FROM pc
 JOIN product ON product.model = pc.model
 WHERE pc.price <500
 
-2.
+2. test delete here
