@@ -25,4 +25,11 @@ FROM pc
 JOIN product ON product.model = pc.model
 WHERE pc.price <500
 
-2. test delete hereccewe
+2. List all printer makers. Result set: maker.
+
+SELECT DISTINCT maker
+FROM Product
+JOIN Printer ON Product.model = Printer.model
+
+
+3.
