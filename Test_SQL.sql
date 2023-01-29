@@ -74,3 +74,81 @@ AND p.maker NOT IN (SELECT maker
 FROM product
 WHERE type='Laptop')
 
+9. Find the makers of PCs with a processor speed of 450 MHz or more. Result set: maker.
+
+SELECT DISTINCT p.maker FROM Product p WHERE p.model IN (SELECT model FROM pc WHERE speed >= 450)
+
+10. Find the printer models having the highest price. Result set: model, price.
+
+SELECT model, price
+FROM Printer
+WHERE price =
+(SELECT MAX(price)
+FROM Printer
+);
+
+11. Find out the average speed of PCs.
+
+SELECT AVG(speed) FROM PC
+
+12. Find out the average speed of the laptops priced over $1000.
+
+SELECT avg(speed) FROM Laptop WHERE  price> 1000
+
+13. Find out the average speed of the PCs produced by maker A.
+
+SELECT AVG(speed) FROM PC WHERE model IN (SELECT model FROM Product WHERE maker = 'A')
+
+
+The database of naval ships that took part in World War II is under consideration. The database consists of the following relations:
+Classes(class, type, country, numGuns, bore, displacement)
+Ships(name, class, launched)
+Battles(name, date)
+Outcomes(ship, battle, result)
+Ships in classes all have the same general design. A class is normally assigned either the name of the first ship built according to the corresponding
+design, or a name that is different from any ship name in the database. The ship whose name is assigned to a class is called a lead ship.
+The Classes relation includes the name of the class, type (can be either bb for a battle ship, or bc for a battle cruiser), country the ship was built in,
+the number of main guns, gun caliber (bore diameter in inches), and displacement (weight in tons). The Ships relation holds information about the ship name,
+the name of its corresponding class, and the year the ship was launched. The Battles relation contains names and dates of battles the ships participated in,
+and the Outcomes relation - the battle result for a given ship (may be sunk, damaged, or OK, the last value meaning the ship survived the battle unharmed).
+Notes: 1) The Outcomes relation may contain ships not present in the Ships relation. 2) A ship sunk can’t participate in later battles. 3) For historical reasons,
+lead ships are referred to as head ships in many exercises.4) A ship found in the Outcomes table but not in the Ships table is still considered in the database.
+This is true even if it is sunk.
+
+
+14. For the ships in the Ships table that have at least 10 guns, get the class, name, and country.
+
+SELECT s.class, s.name, c.country
+FROM Ships AS s
+LEFT JOIN Classes AS c ON c.class = s.class
+WHERE numGuns >= 10
+
+15. Get hard drive capacities that are identical for two or more PCs.
+Result set: hd.
+
+SELECT hd FROM PC
+GROUP BY hd
+HAVING COUNT (hd) >= 2
+
+
+16. Get pairs of PC models with identical speeds and the same RAM capacity. Each resulting pair should be displayed only once, i.e. (i, j) but not (j, i).
+Result set: model with the bigger number, model with the smaller number, speed, and RAM.
+
+SELECT DISTINCT i.model, j.model, i.speed, i.ram
+FROM PC i
+JOIN PC j
+ON i.speed= j.speed AND i.ram = j.ram AND i.model > j.model
+
+17. Get the laptop models that have a speed smaller than the speed of any PC.
+Result set: type, model, speed.
+
+SELECT DISTINCT'Laptop' AS type, model, speed FROM Laptop WHERE speed < (SELECT MIN (speed) FROM PC)
+
+18. Find the makers of the cheapest color printers.
+Result set: maker, price.
+
+SELECT DISTINCT pro.maker, pri.price
+FROM product pro
+INNER JOIN printer pri on pro.model = pri.model
+WHERE color='y' AND pri.price = (SELECT MIN(price) FROM printer WHERE color='y')
+
