@@ -32,4 +32,45 @@ FROM Product
 JOIN Printer ON Product.model = Printer.model
 
 
-3.
+3. Find the model number, RAM and screen size of the laptops with prices over $1000.
+
+SELECT model, ram, screen FROM Laptop WHERE price > 1000
+
+4. Find all records from the Printer table containing data about color printers.
+
+SELECT * FROM  Printer  WHERE color = 'y'
+
+5. Find the model number, speed and hard drive capacity of PCs cheaper than $600 having a 12x or a 24x CD drive.
+
+SELECT model, speed, hd FROM PC WHERE price < 600 AND (cd = '24x' OR cd = '12x')
+
+6. For each maker producing laptops with a hard drive capacity of 10 Gb or higher, find the speed of such laptops. Result set: maker, speed.
+
+SELECT DISTINCT maker, speed
+FROM laptop l, Product p
+WHERE l.model = p.model
+AND l.hd >=10
+
+7. Get the models and prices for all commercially available products (of any type) produced by maker B.
+
+SELECT Product.model, PC.price FROM Product
+JOIN PC ON Product.model = PC.model
+WHERE Product.maker = 'B'
+UNION
+SELECT Product.model, Laptop.price FROM Product
+JOIN Laptop ON Product.model = Laptop.model
+WHERE Product.maker = 'B'
+UNION
+SELECT Product.model, Printer.price FROM Product
+JOIN Printer ON Product.model = Printer.model
+WHERE Product.maker = 'B'
+
+8. Find the makers producing PCs but not laptops.
+
+SELECT DISTINCT p.maker
+FROM product p
+WHERE p.type = 'PC'
+AND p.maker NOT IN (SELECT maker
+FROM product
+WHERE type='Laptop')
+
